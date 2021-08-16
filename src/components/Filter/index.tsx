@@ -85,8 +85,8 @@ const Filter = () => {
   return (
     <>
       <SearchInput handleSearch={handleSearch} filteredFilms={filteredFilms} />
-      <GenreOptions setFilter={setGenreFilter} />
       <RatingOptions setFilter={setRatingFilter} />
+      <GenreOptions setFilter={setGenreFilter} />
     </>
   )
 }
