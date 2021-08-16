@@ -1,93 +1,96 @@
-import { FC, useState } from 'react'
-import styled from 'styled-components'
+import { FC, useEffect, useRef, useState } from 'react'
 import {
-  CheckBoxContainer,
-  FilterContainer,
-  MainOption,
+  Select,
+  SelectText,
+  SelectTrigger,
+  SelectWrapper,
   StyledArrowDownSvg,
   StyledArrowUpSvg,
-} from '../styledOptions'
-import { OptionProps, VariantProps } from '../types'
-import { ReactComponent as StarSvg } from '../../assets/Star.svg'
+  Option,
+  CheckBoxContainer,
+} from '../styledSelect'
+
+import { OptionProps } from '../types'
+import { Options, OptionText, StyledEmptyStar, StyledStar } from './styled'
+
 const rating = ['', '', '', '', '', '', '', '', '', '']
 
-const StyledOptionList = styled.ul<{ show: boolean }>`
-  position: absolute;
-  display: ${(props) => (props.show ? 'inherit' : 'none')};
-  border: 1px solid black;
-  width: 239px;
-  height: 303px;
-  list-style: none;
-  padding-left: 12px;
-  padding: 12px 0;
-  margin-top: 3px;
-  background: white;
-`
-const StyledOption = styled.li`
-  padding: 2px 0;
-`
-const StyledGenreType = styled.span`
-  font-family: 'DM Sans';
-  font-size: 14px;
-`
-
-const RatingOptions: FC<OptionProps> = () => {
-  const [variants, setVariants] = useState<VariantProps[]>([
-    { id: 0, value: false },
-    { id: 1, value: false },
-    { id: 2, value: false },
-    { id: 3, value: false },
-    { id: 4, value: false },
-    { id: 5, value: false },
-    { id: 6, value: false },
-    { id: 7, value: false },
-    { id: 8, value: false },
-    { id: 9, value: false },
-    { id: 10, value: false },
-  ])
-  const [dropdown, setDropdown] = useState(false)
-  function dropdownHandler() {
-    setDropdown((prev) => !prev)
+const RatingOptions: FC<OptionProps> = ({ setFilter }) => {
+  const modalRef = useRef<HTMLDivElement>(null)
+  const [open, setOpen] = useState(false)
+  useEffect(() => {
+    const blur = (e: any) => {
+      if (!modalRef.current) return
+      if (!modalRef.current.contains(e.target) && open) {
+        setOpen(false)
+      }
+    }
+    window.addEventListener('click', blur)
+    return () => {
+      window.removeEventListener('click', blur)
+    }
+  }, [open])
+  function toggleSelect() {
+    setOpen((prev) => !prev)
   }
-  function checkboxhandler(id: number, e: React.ChangeEvent<HTMLInputElement>) {
-    setVariants((prev) => {
+  function checkboxhandler(id: string, e: React.ChangeEvent<HTMLInputElement>) {
+    setFilter((prev) => {
       return prev.map((variant) => {
         if (variant.id === id) return { ...variant, value: e.target.checked }
         return { ...variant }
       })
     })
-    console.log(variants)
+  }
+  function spawnStars(i: number) {
+    let array = new Array(10)
+    for (let j = 0; j < 10; j++) {
+      if (j < i + 1) {
+        array.fill(<StyledStar key={j} />, j, j + 1)
+      }
+      if (j >= i + 1) {
+        array.fill(<StyledEmptyStar key={j} />, j, j + 1)
+      }
+    }
+
+    return array
   }
   return (
-    <FilterContainer>
-      <MainOption onClick={dropdownHandler}>
-        <span>Rating</span>
-        {dropdown ? <StyledArrowDownSvg /> : <StyledArrowUpSvg />}
-      </MainOption>
-      <StyledOptionList show={dropdown}>
-        <StyledOption>
-          <CheckBoxContainer>
-            <StyledGenreType>Any rating</StyledGenreType>
-            <input type='checkbox' onChange={(e) => checkboxhandler(0, e)} />
-            <span className='checkmark'></span>
-          </CheckBoxContainer>
-        </StyledOption>
-        {rating.map((rate, i) => (
-          <StyledOption key={i}>
+    <SelectWrapper>
+      <Select>
+        <SelectTrigger onClick={toggleSelect}>
+          <SelectText>Rating</SelectText>
+          {open ? <StyledArrowUpSvg /> : <StyledArrowDownSvg />}
+        </SelectTrigger>
+        <Options open={open} ref={modalRef}>
+          <Option>
             <CheckBoxContainer>
-              <StyledGenreType>
-                {new Array(i + 1).fill(<StarSvg />)}
-              </StyledGenreType>
+              <OptionText>Any rating</OptionText>
               <input
                 type='checkbox'
-                onChange={(e) => checkboxhandler(i + 1, e)}
+                onChange={(e) => {
+                  checkboxhandler('0', e)
+                }}
               />
               <span className='checkmark'></span>
             </CheckBoxContainer>
-          </StyledOption>
-        ))}
-      </StyledOptionList>
-    </FilterContainer>
+          </Option>
+          {rating.map((rate, i) => (
+            <Option key={i}>
+              <CheckBoxContainer>
+                <OptionText>{spawnStars(i)}</OptionText>
+                <input
+                  type='checkbox'
+                  onChange={(e) => {
+                    checkboxhandler(i + 1 + '', e)
+                  }}
+                />
+                <span className='checkmark'></span>
+              </CheckBoxContainer>
+            </Option>
+          ))}
+        </Options>
+      </Select>
+    </SelectWrapper>
   )
 }
 export default RatingOptions

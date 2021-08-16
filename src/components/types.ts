@@ -1,7 +1,10 @@
+import { Dispatch, SetStateAction } from "react";
+
 export interface OptionProps{
-  dropdownHandler:()=>void
+  setFilter: Dispatch<SetStateAction<VariantProps[]>>
+
 }
 export interface VariantProps {
-    id: number
+    id: string
     value: boolean
   }
