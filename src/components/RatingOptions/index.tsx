@@ -59,7 +59,7 @@ const RatingOptions: FC<OptionProps> = ({ setFilter }) => {
       <Select>
         <SelectTrigger onClick={toggleSelect}>
           <SelectText>Rating</SelectText>
-          {open ? <StyledArrowUpSvg /> : <StyledArrowDownSvg />}
+          {open ? <StyledArrowDownSvg /> : <StyledArrowUpSvg />}
         </SelectTrigger>
         <Options open={open} ref={modalRef}>
           <Option>

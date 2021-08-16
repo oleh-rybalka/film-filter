@@ -3,14 +3,10 @@ import { ReactComponent as ArrowDownSvg } from '../assets/arrow-down.svg'
 import { ReactComponent as ArrowUpSvg } from '../assets/arrow-up.svg'
 
 export const StyledArrowUpSvg = styled(ArrowUpSvg)`
-  position: absolute;
-  right: 19.36px;
-  top: 19.36px;
+
 `
 export const StyledArrowDownSvg = styled(ArrowDownSvg)`
-  position: absolute;
-  right: 19.36px;
-  top: 19.36px;
+
 `
 export const CheckBoxContainer = styled.label`
   position: relative;
@@ -95,7 +91,8 @@ export const SelectTrigger = styled.div`
   cursor: pointer;
   svg{ 
     position: absolute;
-    right:19.76px;
+    right:15px;
+    top:19px;
   }
 `
 export const Option = styled.span`

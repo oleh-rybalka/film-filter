@@ -46,7 +46,7 @@ const GenreOptions: FC<OptionProps> = ({ setFilter }) => {
       <Select>
         <SelectTrigger onClick={toggleSelect}>
           <SelectText>Genre</SelectText>
-          {open ? <StyledArrowUpSvg /> : <StyledArrowDownSvg />}
+          {open ? <StyledArrowDownSvg /> : <StyledArrowUpSvg />}
         </SelectTrigger>
         <Options open={open} ref={modalRef}>
           {genres.map((genre, i) => (
